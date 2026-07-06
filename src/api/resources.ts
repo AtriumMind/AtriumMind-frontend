@@ -212,9 +212,13 @@ export async function prepareSetPrice(
 }
 
 export async function fetchRegistryStatus(): Promise<{ resourceCount: number }> {
-  const res = await fetch(`${API_BASE}/registry/status`);
-  if (!res.ok) throw new Error("Failed to fetch registry status");
-  return res.json();
+  try {
+    const res = await fetch(`${API_BASE}/registry/status`);
+    if (!res.ok) return { resourceCount: 0 };
+    return res.json();
+  } catch {
+    return { resourceCount: 0 };
+  }
 }
 
 export async function prepareTransferOwnership(
