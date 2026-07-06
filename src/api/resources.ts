@@ -67,7 +67,10 @@ export async function fetchCatalog(filters?: CatalogFilters): Promise<any[]> {
 
   const qs = params.toString();
   const res = await fetch(`${API_BASE}/resources${qs ? `?${qs}` : ""}`);
-  if (!res.ok) throw new Error("Failed to fetch catalog");
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Catalog fetch failed (${res.status}): ${body.slice(0, 100)}`);
+  }
   return res.json();
 }
 
